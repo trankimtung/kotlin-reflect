@@ -8,6 +8,17 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.jvmErasure
 
 /**
+ * Check if given class is written in Kotlin.
+ *
+ * @param type target class
+ * @return true if given class is written in Kotlin.
+ */
+fun <T : Any> isKotlinClass(type: KClass<T>): Boolean =
+    type.java.annotations.any {
+        it.annotationClass.qualifiedName == "kotlin.Metadata"
+    }
+
+/**
  * Find a property in given type by name.
  *
  * @param type type to find property in.

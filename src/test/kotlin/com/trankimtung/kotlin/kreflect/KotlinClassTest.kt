@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test
 internal class KotlinClassTest {
 
     @Test
+    fun `Is Kotlin class`() {
+        assertTrue(isKotlinClass(TestClass::class))
+    }
+
+    @Test
     fun `Not null property exists at top level`() {
         assertTrue(containsProperty(TestClass::class, "prop1"))
         assertTrue(containsPropertyByPath(TestClass::class, "prop1"))
