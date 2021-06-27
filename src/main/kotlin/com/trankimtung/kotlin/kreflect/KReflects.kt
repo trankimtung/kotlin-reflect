@@ -5,6 +5,7 @@ package com.trankimtung.kotlin.kreflect
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.jvmErasure
 
 /**
@@ -73,7 +74,10 @@ fun <T : Any> containsPropertyByPath(type: KClass<T>, path: String): Boolean =
  * @return property's value, can be null.
  */
 fun <T : Any> getProperty(obj: T, name: String): Any? =
-    findProperty(obj.javaClass.kotlin, name)?.getter?.call(obj)
+    findProperty(obj.javaClass.kotlin, name)?.let {
+        it.isAccessible = true // consider another approach to avoid breaking encapsulation.
+        it.getter.call(obj)
+    }
 
 /**
  * Get a property's value by path.
