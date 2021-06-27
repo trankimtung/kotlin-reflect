@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.trankimtung.kotlin"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1.A1"
 
 sourceSets.main {
     java.srcDirs("src/main/java", "src/main/kotlin")
