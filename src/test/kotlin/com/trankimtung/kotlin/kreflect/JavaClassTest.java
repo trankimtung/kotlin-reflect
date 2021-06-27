@@ -26,7 +26,7 @@ class JavaClassTest extends BaseTest<JavaClassTest.TestClass> {
     }
 
     public static class TestClass {
-        private String prop1 = "prop1";
+        private final String prop1 = "prop1";
         private Integer prop2 = null;
         private TestClass nested = null;
 
@@ -39,10 +39,6 @@ class JavaClassTest extends BaseTest<JavaClassTest.TestClass> {
 
         public String getProp1() {
             return prop1;
-        }
-
-        public void setProp1(String prop1) {
-            this.prop1 = prop1;
         }
 
         public Integer getProp2() {

@@ -3,6 +3,7 @@
 package com.trankimtung.kotlin.kreflect
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -20,16 +21,6 @@ fun <T : Any> isKotlinClass(type: KClass<T>): Boolean =
     }
 
 /**
- * Find a property in given type by name.
- *
- * @param type type to find property in.
- * @param name name of target property.
- * @return found property, null if not found.
- */
-fun <T : Any> findProperty(type: KClass<T>, name: String): KProperty1<T, *>? =
-    type.memberProperties.find { it.name == name }
-
-/**
  * Find a property in given type by path.
  *
  * @param type type to find property in.
@@ -44,6 +35,16 @@ fun <T : Any> findPropertyByPath(type: KClass<T>, path: String): KProperty1<out 
         findProperty(type, path)
     }
 }
+
+/**
+ * Find a property in given type by name.
+ *
+ * @param type type to find property in.
+ * @param name name of target property.
+ * @return found property, null if not found.
+ */
+fun <T : Any> findProperty(type: KClass<T>, name: String): KProperty1<T, *>? =
+    type.memberProperties.find { it.name == name }
 
 /**
  * Check if given type contains a property with specified name.
@@ -74,7 +75,7 @@ fun <T : Any> containsPropertyByPath(type: KClass<T>, path: String): Boolean =
  * @return property's value, can be null.
  */
 fun <T : Any> getProperty(obj: T, name: String): Any? =
-    findProperty(obj.javaClass.kotlin, name)?.let {
+    findProperty(obj::class, name)?.let {
         it.isAccessible = true // consider another approach to avoid breaking encapsulation.
         it.getter.call(obj)
     }
@@ -94,6 +95,23 @@ fun <T : Any> getPropertyByPath(obj: T, path: String): Any? {
         }
     } else {
         getProperty(obj, path)
+    }
+}
+
+/**
+ * Set a property value by name.
+ * S return if target property does not exist.
+ *
+ * @param obj target object.
+ * @param name property name.
+ * @param value value to set.
+ */
+fun setProperty(obj: Any, name: String, value: Any?) {
+    findProperty(obj::class, name)?.let {
+        it.isAccessible = true // consider another approach to avoid breaking encapsulation.
+        if (it is KMutableProperty<*>) {
+            it.setter.call(obj, value)
+        }
     }
 }
 

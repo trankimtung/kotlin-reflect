@@ -2,6 +2,8 @@ package com.trankimtung.kotlin.kreflect
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import kotlin.random.Random
+import kotlin.random.nextLong
 import kotlin.reflect.KClass
 
 abstract class BaseTest<T : Any> {
@@ -93,5 +95,25 @@ abstract class BaseTest<T : Any> {
         val obj = obj()
         assertNull(getProperty(obj, "nested.nested.prop1"))
         assertNull(getPropertyByPath(obj, "nested.nested.prop1"))
+    }
+
+    @Test
+    fun `Target property to set is immutable`() {
+        val obj = obj()
+        assertDoesNotThrow {
+            val value = getProperty(obj, "prop1")
+            setProperty(obj, "prop1", "prop1's value")
+            assertEquals(value, getProperty(obj, "prop1"))
+        }
+    }
+
+    @Test
+    fun `Target property to set is mutable`() {
+        val obj = obj()
+        assertDoesNotThrow {
+            val value = Random(System.currentTimeMillis()).nextInt()
+            setProperty(obj, "prop2", value)
+            assertEquals(value, getProperty(obj, "prop2"))
+        }
     }
 }

@@ -18,7 +18,7 @@ class KotlinClassTest : BaseTest<KotlinClassTest.TestClass>() {
     @Suppress("unused")
     class TestClass(
         val prop1: String = "prop1",
-        val prop2: Int? = null,
+        var prop2: Int? = null,
         val nested: TestClass? = null
     )
 }
